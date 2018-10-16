@@ -1,0 +1,1 @@
+V.0.00 - This version is the first implementation that only connects to one MCR board and prints the received message to check for consistency of communication.

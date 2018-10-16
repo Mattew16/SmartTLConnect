@@ -1,0 +1,13 @@
+V.1.50 - Support up to 999 intersections. Architecture changes for future support of commands. 
+
+V.1.40 - Implementation of intersection id in the communications and all the related functionalities. 
+
+V.1.30 - Basic implementation to allow the control of multiple controllers. Requires source changes for the amount of controllers. 
+
+V.1.20 - First iteration that contains a simple version of bidirectional communication.
+
+V.1.10 - Contains all the necessary information to correctly represent an intersection. Only receives data from one controller at a time and sends messages to that controller. 
+
+V.1.00 - Does not have all the intersection required information. This version has considerable architecture changes that make the basis for future developments. 
+
+V.0.01 - Does not have all the intersection required information. This version is the first implementation and only connects to one MCR board and prints the received message to check for consistency of communication.

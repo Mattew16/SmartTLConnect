@@ -1,0 +1,3 @@
+V.1.00 - Does not have all the intersection required information. This version has considerable archecture changes that make the basis for future developments. Only receives data from one controller at a time and sends messages to that controller. 
+
+V.0.01 - Does not have all the intersection required information. This version is the first implementation that only connects to one MCR board and prints the received message to check for consistency of communication.
