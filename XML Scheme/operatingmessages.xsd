@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by XMLSPY 5 Professional Ed. Release 2, Installed Multi for 22 users (Siemens AG I) -->
+<!--v5.3:initial.-->
+<!--v5.4:Element "Submessages" removed as it was never used and probably will be not used
+         Added sequence with elements "ObjectId" and "ObjectType" to element "Message" -->
+<xsd:schema targetNamespace="http://sitraffic.siemens.com/ws/external/operatingmessages" xmlns:operatingmessages="http://sitraffic.siemens.com/ws/external/operatingmessages" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:element name="OperatingMessages">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="OperatingMessage" type="operatingmessages:OperatingMessage" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>Objecttype: OperatingMessages_Operatingmessage</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="OperatingMessage">
+		<xsd:sequence>
+			<xsd:element name="SystemTypeId" type="xsd:NMTOKEN">
+				<xsd:annotation>
+					<xsd:documentation>To identify the System (e.g. VSR, PLC2000, Concert, VLT, OCIT-Outstation or others)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Hostname" type="xsd:NMTOKEN"/>
+			<xsd:element name="Message" type="operatingmessages:MessageTypeExt">
+				<xsd:annotation>
+					<xsd:documentation>The main message</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="MessageType">
+		<xsd:sequence>
+			<xsd:element name="Category" type="xsd:NMTOKEN" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Type to distinguish between different kinds of messages.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Degree" type="xsd:NMTOKEN" minOccurs="0"/>
+			<xsd:element name="MsgDefId" type="xsd:NMTOKEN">
+				<xsd:annotation>
+					<xsd:documentation>The Identifier of the message type to identify in the database. The MsgDefId is unique within the system (SystemTypeId). The MsgDefId is preconfigured in the database.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="User" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>if available the user who entered the Bema or who issued the related action. It will be entered as plain text (e.g. Heiko Schmitz).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="State" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Describes the state of the message, first of all used to describe appearing/disappearing messages.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:NMTOKEN">
+							<xsd:attribute name="matchcode" use="required">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:NMTOKEN">
+										<xsd:enumeration value="appeared"/>
+										<xsd:enumeration value="disappeared"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:attribute>
+						</xsd:extension>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="Param" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:annotation>
+							<xsd:documentation>Parameter definitions</xsd:documentation>
+						</xsd:annotation>
+						<xsd:element name="ParamId">
+							<xsd:annotation>
+								<xsd:documentation>Identifier of the parameter to enter in the database. The ParamId is preconfigured in the database and is unique within the MsgType.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:simpleContent>
+									<xsd:extension base="xsd:NMTOKEN">
+										<xsd:attribute name="Classify" type="xsd:NMTOKEN" use="optional"/>
+									</xsd:extension>
+								</xsd:simpleContent>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="ParamValue" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Contents/Value of the parameter </xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="CompleteText" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Full text with already replaced parameters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="MessageTypeExt">
+		<xsd:complexContent>
+			<xsd:extension base="operatingmessages:MessageType">
+				<xsd:sequence>
+					<xsd:element name="SysJobId" type="xsd:NMTOKEN" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>for OCIT messages: Messages which belong to the same command which is executed. The SysJobId allows to group Messages.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="Timestamp" type="xsd:dateTime">
+						<xsd:annotation>
+							<xsd:documentation>Time when the message occured. The time is alway in UTC, Example: 2002-12-24T17:00:00+00:00 for Christmas Eve, 18:00 MEZ. The +00:00 is mandatory.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ObjectId" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Identify the affected object, e.g. short name or unit</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ObjektType" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Identify the type of the affected object, e.g. sign or traffic control object</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+</xsd:schema>

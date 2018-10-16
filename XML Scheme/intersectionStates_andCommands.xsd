@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2009 sp1 (http://www.altova.com) von XMLSpy 2009 Professional Ed., Concurrent for 10 users (with SMP from 2009-08-13 to 2010-08-14) (Siemens AG) bearbeitet -->
+<!-- edited with XMLSpy v2010 rel. 3 sp1 (x64) (http://www.altova.com) by XMLSpy 2009 Professional Ed., Concurrent for 10 users (with SMP from 2009-08-13 to 2010-08-14) (Siemens AG) -->
+<!-- Version 5.3 INITIAL-->
+<!-- 2010-12-01 Gerner Version 6.0: Added Params to faultStatus, make child elements of IntersectionStatus own complex types -->
+<!-- 2012-11-06 Gerner Version 6.5: Added IntersectionCommand and IntersectionFeature; extended IntersectionStatus to reflect possible Intersection functiions -->
+<xs:schema xmlns:global="http://sitraffic.siemens.com/ws/external/global" xmlns:local="http://sitraffic.siemens.com/ws/external/intersectionStates_andCommands" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://sitraffic.siemens.com/ws/external/intersectionStates_andCommands" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://sitraffic.siemens.com/ws/external/global" schemaLocation="global.xsd"/>
+	<!-- ********* input and output of states *********-->
+	<!--ObjType: IntersectionStatus-->
+	<!--Identifier: intersectionIdentifier-->
+	<xs:complexType name="IntersectionStatus">
+		<xs:sequence>
+			<xs:element name="identifier" type="xs:string"/>
+			<xs:element name="receiveTime" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>the time when this status has last changed may be received from the field device or inserted by the subsystem when it has received the status.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="faultStatus" type="local:faultStatusType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="deviceState" type="xs:short" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>From the fault states calculated device state of the intersection</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="priority" type="xs:unsignedInt" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>priority level should be set in case jobNr is not set
+0: scheduler
+1: traffic actuation
+2: high prio scheduler
+3: manual
+4: high prio manual
+5: error locked
+6: unknown</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="controlMode" type="local:controlModeType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>central/local mode</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="intersectionOnOff" type="local:intersectionOnOffType" minOccurs="0"/>
+			<xs:element name="subIntersectionOnOff" type="local:subIntersectionOnOffType" minOccurs="0" maxOccurs="4"/>
+			<xs:element name="signalProgram" type="local:spType"/>
+			<xs:element name="taOnOff" type="local:taOnOffType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>traffic actuation on/off</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ptOnOff" type="local:ptOnOffType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>public transport priorisation on/off</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="itOnOff" type="local:itOnOffType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>individual transport priosrisation on/off</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="projectSpecificModification" type="local:projectSpecificOnOffType" minOccurs="0" maxOccurs="13"/>
+			<xs:element name="state" type="local:stateType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>0: o.k.
+1: p.o.k.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ******** expert mode for commands********-->
+	<!--ObjType: UtcSubsystem_subsystem_ExpertCommand-->
+	<!--Identifier: source=empty, ident=E<number>, example E17-->
+	<xs:complexType name="EmPut">
+		<xs:choice>
+			<xs:element name="cmdLine">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string"/>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="sessionEnd" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>used to signal End of session to the adapter. Anyway the adapter has to clean up the session after a configured timeout.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<!--ObjType:UtcSubsystem_subsystem_ExpertRespond-->
+	<!--Identifier: source=empty, ident=E<number>, example E17-->
+	<xs:complexType name="EmGet">
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="respond">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string"/>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="echo">
+				<xs:annotation>
+					<xs:documentation>echoed commandline, see EmPut</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string"/>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<!--********************** possibility to issue predefinied commands via interface **********************-->
+	<!--ObjType: PredefCommand -->
+	<!--Identifier: intersection Identifier-->
+	<!--Describing values of an intersection-->
+	<!--ObjType: IntersectionDescription -->
+	<!--Identifier: intersection Identifier-->
+	<xs:complexType name="stateType">
+		<xs:annotation>
+			<xs:documentation>describes the state of the object:
+0 - o.k.
+1 - n.o.k.
+2 - p.o.k.
+3 - unknown</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="stateId" type="xs:int" use="optional"/>
+	</xs:complexType>
+	<xs:element name="intersectionStates_andCommands">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="intersectionStatus" type="local:IntersectionStatus">
+					<xs:annotation>
+						<xs:documentation>objecttype: IntersectionStatus</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="IntersectionDescription" type="global:Description">
+					<xs:annotation>
+						<xs:documentation>objecttype : IntersectionDescription</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="PredefCommand" type="local:PredefCommand">
+					<xs:annotation>
+						<xs:documentation>objecttype:  IntersectionPredefined</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="IntersectionCommand" type="local:IsCommandType">
+					<xs:annotation>
+						<xs:documentation>objecttype: IntersectionCommand</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="IntersectionFeature" type="local:IsFeatureType">
+					<xs:annotation>
+						<xs:documentation>objecttype: IntersectionFeature</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="IntersectionControlParameter" type="local:ControlMethodParameterType">
+					<xs:annotation>
+						<xs:documentation>object type: IntersectionControlParameter</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="IntersectionGroupDescription" type="global:Description">
+					<xs:annotation>
+						<xs:documentation>object type: IntersectionGroupDescription</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="PredefCommand">
+		<xs:sequence>
+			<xs:element name="id" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Object id (lsa shortname)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="command_id" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>command id (id within predefinedops.xml )</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="command" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>description of the command</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="faultStatusType">
+		<xs:sequence>
+			<xs:element name="TextNr" type="xs:short">
+				<xs:annotation>
+					<xs:documentation>a uniqque number of the fault status</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Params" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>parameters of the faultStatus (e.g. lamp number or detector number)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Text" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>the fault status text</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="controlModeType">
+		<xs:sequence>
+			<xs:element name="cm" type="local:controlModeEnum"/>
+			<xs:element ref="local:jobId" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="intersectionOnOffType">
+		<xs:sequence>
+			<xs:element name="isOnOff" type="local:stateIsOnOffEnum">
+				<xs:annotation>
+					<xs:documentation>enum according to OCIT-O</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="local:jobId" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Job ID according to OCIT-O</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="signalProgramType">
+		<xs:sequence>
+			<xs:element name="spNr" default="0">
+				<xs:annotation>
+					<xs:documentation>0 ... 255
+0 means none specified</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:short">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="255"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="spType">
+		<xs:sequence>
+			<xs:element name="spNr" default="0">
+				<xs:annotation>
+					<xs:documentation>0 ... 255
+0 means none specified</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:short">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="255"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element ref="local:jobId" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ptOnOffType">
+		<xs:sequence>
+			<xs:element name="isOnOff" type="local:baseIsOnOffEnum"/>
+			<xs:element ref="local:jobId" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="baseOnOffEnum">
+		<xs:annotation>
+			<xs:documentation> none means none specific, release</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="off"/>
+			<xs:enumeration value="on"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="isOnOffEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="on"/>
+			<xs:enumeration value="offDefault"/>
+			<xs:enumeration value="offFlashSideStream"/>
+			<xs:enumeration value="offDark"/>
+			<xs:enumeration value="offFlashAll"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="subIntersectionType">
+		<xs:sequence>
+			<xs:element name="onOff" type="local:isOnOffEnum" default="none"/>
+		</xs:sequence>
+		<xs:attribute name="number" use="required">
+			<xs:annotation>
+				<xs:documentation>Number of the sub intersection 0 ... 3</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="timelineType">
+		<xs:sequence>
+			<xs:element name="start" type="xs:dateTime"/>
+			<xs:element name="end" type="xs:dateTime" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="IsCommandType">
+		<xs:sequence>
+			<xs:element name="identifier" type="xs:string"/>
+			<xs:element name="priority" type="xs:unsignedInt" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>0: scheduler
+1: traffic actuation
+2: high prio scheduler
+3: manual
+4: high prio manual</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="jobId" type="xs:long" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Job id acording to OCIT-O</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="timeline" type="local:timelineType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Start and stop of the command. If no timeline is present the command is immediately valid without end.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="signalProgram" type="local:signalProgramType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Signal program to perform. Nopte: If undefined the default is set to 0, see element spNr</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="intersectionOnOff" type="local:isOnOffType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Switch intersection on or off. Note: If undefined the default is set to "none", see element onOff</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="subIntersectionOnOff" type="local:subIntersectionType" minOccurs="0" maxOccurs="4">
+				<xs:annotation>
+					<xs:documentation>Switch sub intersection on or off. Note: If undefined the default is set to "none" for every existing sub intersection, see element onOff.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="localTrafficActuation" type="local:baseOnOffType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Switch local traffic actuation on or off. Note: If undefined the default is set to "none", see element onOff</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="publicTransportOptimization" type="local:baseOnOffType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Switch public transport optimisation on or off. Note: If undefined the default is set to "none", see element onOff</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="individualTransportOptimization" type="local:baseOnOffType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Switch individual transport optimisation on or off. Note: If undefined the default is set to "none", see element onOff</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="projSpecificModification" type="local:projSpecificModificationType" minOccurs="0" maxOccurs="13">
+				<xs:annotation>
+					<xs:documentation>Switch project spezific motification on or off. Note: If undefined the default is set to "none" for every existing project specific modification, see element onOff</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="projSpecificModificationType">
+		<xs:sequence>
+			<xs:element name="onOff" type="local:baseOnOffEnum" default="none"/>
+			<xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="index" type="xs:int" use="required"/>
+					<xs:attribute name="value" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="number" use="required">
+			<xs:annotation>
+				<xs:documentation>0 ... 255</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="255"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="signalPlansType">
+		<xs:sequence>
+			<xs:element name="number">
+				<xs:annotation>
+					<xs:documentation>1 ... 255</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="255"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="name" type="xs:string" minOccurs="0"/>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="routeNumber" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>1 ... 254
+if present this plan is a Emergency Vehicle Route. The content is the route number.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="254"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="cycleTime" type="xs:int" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>cycle time in seconds</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="featuresType">
+		<xs:sequence>
+			<xs:element name="ProjSpecificMod" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="number" type="xs:int" use="required">
+						<xs:annotation>
+							<xs:documentation>0..255</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="name" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>description if no nls text is configured</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="isState" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>false if project specific method isn´a state and doesn´t have a duration (one shot command)</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="availableIntersectionOnOff" type="local:stateIsOnOffEnum" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>optional onOff states of the controller (used for main intersection and subintersections). If not specified it is assumed that the controller can switch to all states defined within stateIsOnOffEnum.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="numberOfSubIntersections" default="0">
+			<xs:annotation>
+				<xs:documentation>0 ... 4</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="hasLocalTrafficActuation" type="xs:boolean" default="false"/>
+		<xs:attribute name="hasPublicTransportPriorization" type="xs:boolean" default="false"/>
+		<xs:attribute name="hasIndividualTransportPriorization" type="xs:boolean" default="false"/>
+	</xs:complexType>
+	<xs:complexType name="IsFeatureType">
+		<xs:sequence>
+			<xs:element name="identifier" type="xs:string"/>
+			<xs:element name="signalPlans" type="local:signalPlansType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="features" type="local:featuresType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="isOnOffType">
+		<xs:sequence>
+			<xs:element name="onOff" type="local:isOnOffEnum" default="none"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="baseOnOffType">
+		<xs:sequence>
+			<xs:element name="onOff" type="local:baseOnOffEnum" default="none"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="stateIsOnOffEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="on"/>
+			<xs:enumeration value="offDefault"/>
+			<xs:enumeration value="offFlashSideStream"/>
+			<xs:enumeration value="offDark"/>
+			<xs:enumeration value="offFlashAll"/>
+			<xs:enumeration value="local"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="jobId" type="xs:long">
+		<xs:annotation>
+			<xs:documentation>Job ID acording to OCIT-O</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="baseIsOnOffEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="on"/>
+			<xs:enumeration value="offDefault"/>
+			<xs:enumeration value="local"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="itOnOffType">
+		<xs:sequence>
+			<xs:element name="isOnOff" type="local:baseIsOnOffEnum"/>
+			<xs:element ref="local:jobId" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="taOnOffType">
+		<xs:sequence>
+			<xs:element name="isOnOff" type="local:baseIsOnOffEnum"/>
+			<xs:element ref="local:jobId" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="projectSpecificOnOffType">
+		<xs:sequence>
+			<xs:element name="isOnOff" type="local:baseIsOnOffEnum"/>
+			<xs:element ref="local:jobId" minOccurs="0"/>
+			<xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="index" type="xs:int" use="required"/>
+					<xs:attribute name="value" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="number" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>0 ... 255</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="subIntersectionOnOffType">
+		<xs:sequence>
+			<xs:element name="isOnOff" type="local:stateIsOnOffEnum"/>
+			<xs:element ref="local:jobId" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="number" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>0 ... 3</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:simpleType name="controlModeEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="localScheduler"/>
+			<xs:enumeration value="central"/>
+			<xs:enumeration value="unknown"/>
+			<xs:enumeration value="remotePC"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ControlMethodParameterType">
+		<xs:sequence>
+			<xs:element name="id" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Object id (lsa shortname)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="path" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>path for ApWertName in protocoll OCIT-O, e.g. VS-PLUS.NETZSTEUERUNG</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="methodname" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>name of control method in the in the controller, e.g. VS-PLUS</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="interfacename" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>name of the interface in the controller, e.g. NETZSTEUERUNG</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="data" type="xs:base64Binary">
+				<xs:annotation>
+					<xs:documentation>data content of the OCIT-O datatype APWertBlock (1:508)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

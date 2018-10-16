@@ -1,0 +1,74 @@
+
+ROM used:   1156/2048 (56%)
+            1156/2048 (56%) including unused fragments
+
+            0.4 Average locations per line
+            2.4 Average locations per statement
+
+RAM used:   30/224 (13%) at main() level
+            36/224 (16%) worst case
+
+Stack used: 1 worst case (0 in main + 1 for interrupts)
+Stack size: 8
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  242   128  26  controlador.c
+  521     0   0  C:\Program Files (x86)\PICC\Devices\16F628A.h
+   37     0   0  C:\Program Files (x86)\PICC\Drivers\stdio.h
+  435     0   0  C:\Program Files (x86)\PICC\Drivers\string.h
+   32     0   0  C:\Program Files (x86)\PICC\Drivers\stddef.h
+   28     0   0  C:\Program Files (x86)\PICC\Drivers\ctype.h
+ 1352   359  74  C:\Program Files (x86)\PICC\Drivers\stdlib.h
+----- -----
+ 2647   487 Total
+
+Page ROM  %  RAM    Vol Diff  Functions:
+---- --- --- ---    --- ----  ----------
+0     21   2    1             @delay_ms1
+0     53   5    3    485  5.2  get_232
+0     28   2    1     50  1.0  readMessage
+0     17   1    0             @const808
+0     54   5    3    112  1.6  sendMessage
+0     17   1    0             @const811
+0    108   9    1    221  1.3  modemConfiguration
+0     29   3    0             @const817
+0     28   2    0             @const818
+0     29   3    0             @const819
+0     31   3    0             @const820
+0     40   3    0             @const821
+0     81   7    1    152  1.3  setupConnection
+0     33   3    0             @const823
+0     23   2    0             @const824
+0     26   2    0             @const825
+0     53   5    0             @const826
+0     21   2    1     33  0.9  openConnection
+0     15   1    0             @const828
+0     28   2    1     50  1.0  closeConnection
+0     15   1    0             @const830
+0     30   3    1    258  3.2  changeStatus
+0     44   4    2    338  4.7  checkBlinkingMode
+0     19   2    0             @const836
+0    264  23    2   1562  6.8  MAIN
+ Inline         0             @cinit1
+
+Program metrics:
+    Functions               10
+    Statements              487
+    Comments                522
+    Volume (V)              4861
+    Difficulty (D)          26.1
+    Effort to implement (E) 126801
+    Time to implement (T)   1 hours, 57 minutes
+    Est Delivered Bugs (B)  1
+    Cyclomatic Complexity   14
+    Maintainability (MI)    27
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-00030    45  0  
+00031-007FF  1107  892  
+
+
+

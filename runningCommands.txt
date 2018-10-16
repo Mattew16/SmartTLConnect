@@ -1,0 +1,22 @@
+-agentlib:jdwp=transport=dt_socket,suspend=y,address=localhost:52781 -Dfile.encoding=Cp1252 -classpath ~/workspace/ExampleExtIF/bin:~/workspace/ExampleExtIF/lib/axis.jar:~/workspace/ExampleExtIF/lib/externalinterface.jar:~/workspace/ExampleExtIF/lib/externaltypes.jar:~/workspace/ExampleExtIF/lib/jaxrpc.jar:~/workspace/ExampleExtIF/lib/log4j.jar:~/workspace/ExampleExtIF/lib/commons-discovery.jar:~/workspace/ExampleExtIF/lib/commons-logging.jar:~/workspace/ExampleExtIF/lib/dom4j.jar:~/workspace/ExampleExtIF/lib/saaj.jar:~/workspace/ExampleExtIF/lib/wsdl4j.jar sample.server.ExtIFServer
+
+
+
+
+
+
+
+
+
+
+
+
+RUN CLIENT:
+
+-classpath ./bin:./lib/axis.jar:./lib/externalinterface.jar:./lib/externaltypes.jar:./lib/jaxrpc.jar:./lib/log4j.jar:./lib/commons-discovery.jar:./lib/commons-logging.jar:./lib/dom4j.jar:./lib/saaj.jar:./lib/wsdl4j.jar sample.client.ExtIFClient
+
+
+
+RUN SERVER:
+
+-classpath ./bin:./lib/axis.jar:./lib/externalinterface.jar:./lib/externaltypes.jar:./lib/jaxrpc.jar:./lib/log4j.jar:./lib/commons-discovery.jar:./lib/commons-logging.jar:./lib/dom4j.jar:./lib/saaj.jar:./lib/wsdl4j.jar sample.server.ExtIFServer

@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2009 sp1 (http://www.altova.com) von XMLSpy 2009 Professional Ed., Concurrent for 10 users (with SMP from 2009-08-13 to 2010-08-14) (Siemens AG) bearbeitet -->
+<!-- Version 5.3 initial version-->
+<!-- Version 5.4 detector extended for description type by Gerner (Siemens AG) -->
+<!-- Version 5.5 defined additional vehicle types (simple type vehicleTyp) by Gerner (Siemens AG) -->
+<!-- Version 5.6 losType maxValue=6, annotation of value 6 and extended annotation on los elements -->
+<!-- Version 5.7 new objectType losValueType/traveltimeValueType for Section/SubSection/Route/Area -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:global="http://sitraffic.siemens.com/ws/external/global" xmlns:local="http://sitraffic.siemens.com/ws/external/trafficdata" targetNamespace="http://sitraffic.siemens.com/ws/external/trafficdata" elementFormDefault="qualified">
+	<xsd:import namespace="http://sitraffic.siemens.com/ws/external/global" schemaLocation="global.xsd"/>
+	<xsd:element name="trafficData">
+		<xsd:complexType>
+			<xsd:choice>
+				<xsd:element name="detector" type="local:detectorType">
+					<xsd:annotation>
+						<xsd:documentation>single sensor values at a single lane (Detektoren)</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="detectorGroup" type="local:detectorGroupType">
+					<xsd:annotation>
+						<xsd:documentation>sensor values accomulates several lanes (Messquerschnitte)</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="trafficSection" type="local:trafficSectionType"/>
+				<xsd:element name="trafficSubSection" type="local:trafficSubSectionType"/>
+				<xsd:element name="trafficArea" type="local:trafficAreaType"/>
+				<xsd:element name="trafficSubArea" type="local:trafficAreaType"/>
+				<xsd:element name="link" type="local:linkType"/>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="detectorType">
+		<xsd:choice>
+			<xsd:element name="Descr" type="global:Description">
+				<xsd:annotation>
+					<xsd:documentation>object type TrafficData_detector_Description</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="currentValue" type="local:currentValueType">
+				<xsd:annotation>
+					<xsd:documentation>current values objecttype TafficData_detector_currentValue</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="detectorGroupType">
+		<xsd:choice>
+			<xsd:element name="Descr" type="global:Description">
+				<xsd:annotation>
+					<xsd:documentation>objecttype TrafficData_detectorGroup_Description</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="currentValue" type="local:currentValueType">
+				<xsd:annotation>
+					<xsd:documentation>objecttype TafficData_detectorGroup_currentValue</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="calculatedValue" type="local:calculatedValueType">
+				<xsd:annotation>
+					<xsd:documentation>objecttype: TrafficData_detectorGroup_calculatedValue</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="trafficSubSectionType">
+		<xsd:annotation>
+			<xsd:documentation>objecttype: TrafficData_SubSection_calcsum_value</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice>
+			<xsd:element name="Descr" type="global:Description">
+				<xsd:annotation>
+					<xsd:documentation>objecttype: TrafficData_trafficSubSection_Description</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="accumulatedValue" type="local:accumulatedValueType">
+				<xsd:annotation>
+					<xsd:documentation>objecttype: TrafficData_trafficSubSection__accumulatedValue</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="losValue" type="local:losValueType">
+				<xsd:annotation>
+					<xsd:documentation>objecttype: TrafficData_trafficSubSection_losValue</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="traveltimeValue" type="local:traveltimeValueType">
+				<xsd:annotation>
+					<xsd:documentation>objecttype: TrafficData_trafficSubSection_traveltimeValue</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="trafficSectionType">
+		<xsd:choice>
+			<xsd:element name="Descr" type="global:Description">
+				<xsd:annotation>
+					<xsd:documentation>Objecttype: TrafficData_trafficSection_Description
+TrafficData_trafficRoute__Description</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="accumulatedValue" type="local:accumulatedValueType">
+				<xsd:annotation>
+					<xsd:documentation>objecttype: TrafficData_trafficSection__accumulatedValue
+TrafficData_trafficRoute__accumulatedValue</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="losValue" type="local:losValueType">
+				<xsd:annotation>
+					<xsd:documentation>objecttype: TrafficData_trafficSection_losValue
+TrafficData_trafficRoute_losValue</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="traveltimeValue" type="local:traveltimeValueType">
+				<xsd:annotation>
+					<xsd:documentation>objecttype: TrafficData_trafficSection_traveltimeValue
+TrafficData_trafficRoute_traveltimeValue</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="trafficAreaType">
+		<xsd:choice>
+			<xsd:element name="Descr" type="global:Description">
+				<xsd:annotation>
+					<xsd:documentation>objecttype: TrafficData_trafficArea_Description</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="accumulatedValue" type="local:accumulatedValueType">
+				<xsd:annotation>
+					<xsd:documentation>objecttype: TrafficData_trafficArea__accumulatedValue</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="losValue" type="local:losValueType">
+				<xsd:annotation>
+					<xsd:documentation>objecttype: TrafficData_trafficArea_losValue</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="trafficSubAreaType">
+		<xsd:choice>
+			<xsd:element name="Descr">
+				<xsd:annotation>
+					<xsd:documentation>objecttype: TrafficData_trafficArea_Description</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="accumulatedValue" type="local:accumulatedValueType">
+				<xsd:annotation>
+					<xsd:documentation>objecttype: TrafficData_trafficArea__accumulatedValue</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="linkType">
+		<xsd:choice>
+			<xsd:element ref="local:currentLink"/>
+			<xsd:element ref="local:predictionLink"/>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="commonLinkType">
+		<xsd:sequence>
+			<xsd:element name="linkId" type="xsd:long">
+				<xsd:annotation>
+					<xsd:documentation>link -> Identifikationsmerkma</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="fromNodeId" type="xsd:long">
+				<xsd:annotation>
+					<xsd:documentation>Richtungsbezug -> Identifikationsmerkma</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="timeline" type="local:timelineType">
+				<xsd:annotation>
+					<xsd:documentation>Meß- oder Berechnungszeitpunkt der gelieferten Daten</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="currentLink" type="local:currentLinkType">
+		<xsd:annotation>
+			<xsd:documentation>objecttype: TrafficData_link_currentLink</xsd:documentation>
+		</xsd:annotation>
+		<xsd:unique name="currentVehicles">
+			<xsd:selector xpath="local:currentLinkValue/local:vehicleClass"/>
+			<xsd:field xpath="."/>
+		</xsd:unique>
+	</xsd:element>
+	<xsd:complexType name="currentLinkType">
+		<xsd:complexContent>
+			<xsd:extension base="local:commonLinkType">
+				<xsd:sequence>
+					<xsd:element name="currentLinkValue" maxOccurs="10">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="values" type="local:linkValueType" minOccurs="0"/>
+								<xsd:element name="vehicleClass" type="local:predictionVehicleType" default="all" minOccurs="0"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="predictionLink" type="local:predictionLinkType">
+		<xsd:annotation>
+			<xsd:documentation>objecttype: TrafficData_link_predictionShortterm, TrafficData_link_predictionMidterm, TrafficData_link_predictionLongterm</xsd:documentation>
+		</xsd:annotation>
+		<xsd:unique name="predictedVehicle">
+			<xsd:selector xpath="local:predictionLinkValue/local:vehicleClass"/>
+			<xsd:field xpath="."/>
+		</xsd:unique>
+	</xsd:element>
+	<xsd:complexType name="predictionLinkType">
+		<xsd:complexContent>
+			<xsd:extension base="local:commonLinkType">
+				<xsd:sequence>
+					<xsd:element name="predictionLinkValue" maxOccurs="10">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="predictionTime" type="xsd:int">
+									<xsd:annotation>
+										<xsd:documentation>Prognosehorizont (Beginn des ersten Prognoseintervals)</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="predictionInterval" type="xsd:int">
+									<xsd:annotation>
+										<xsd:documentation>Länge des Intervals zwischen den einzelnen predictionLinkValues (in s)</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="values" type="local:linkValueType" minOccurs="0" maxOccurs="unbounded"/>
+								<xsd:element name="vehicleClass" type="local:predictionVehicleType" default="all" minOccurs="0"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="calculatedValueType">
+		<xsd:sequence>
+			<xsd:element name="id">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string"/>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="timeline" type="local:timelineType"/>
+			<xsd:element name="los" type="local:losType">
+				<xsd:annotation>
+					<xsd:documentation>level of service as values 0 to 6 (0:free), see also annotation of global type losType</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="linkValueType">
+		<xsd:sequence>
+			<xsd:element name="vMax" type="xsd:int" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Freifahrgeschwindigkeiten (km/h)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="qMax" type="xsd:int" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Kapazität (Fzg/h)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="vVeh" type="xsd:int" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Geschwindigkeit (km/h)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="qVeh" type="xsd:int" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Verkehrsstärke (Fzg/h)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="dVeh" type="xsd:int" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Dichte (Fzg/km)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="acc" type="xsd:int" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Zuverlässigkeit</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="travelTime" type="xsd:int" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Reisezeit (in s)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="normalizedTravelTime" type="xsd:int" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>normierte Reisezeit (in s/m)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="los" type="local:losType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Verkehrslage</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="congestion" type="xsd:int" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Rückstaulänge Anzahl Fahrzeuge</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="info" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Any additional information or additional values in any format, e.g. comma separated values or XML format</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="currentValueType">
+		<xsd:sequence>
+			<xsd:element name="id">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string"/>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="timeline" type="local:timelineType"/>
+			<xsd:element name="value" type="local:valueType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>contains occupancy speed and volume (count scaled to 1h (unit=[veh/h])) for defined vehicle type(s)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="alarm" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>List of currently active alarms. If the whole list is missing all alarms are reset.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="NoVideo"/>
+						<xsd:enumeration value="SpeedAlarm"/>
+						<xsd:enumeration value="OccupancyAlarm"/>
+						<xsd:enumeration value="CommunicationError"/>
+						<xsd:enumeration value="StoppedVehicle"/>
+						<xsd:enumeration value="SpeedVariation"/>
+						<xsd:enumeration value="InverseDirection"/>
+						<xsd:enumeration value="SmokeDetected"/>
+						<xsd:enumeration value="BadVideo"/>
+						<xsd:enumeration value="DigitalInput"/>
+						<xsd:enumeration value="UserAlarm"/>
+						<xsd:enumeration value="ConfigChanged"/>
+						<xsd:enumeration value="ZoneActive"/>
+						<xsd:enumeration value="OutputGroupActive"/>
+						<xsd:enumeration value="PhaseActive"/>
+						<xsd:enumeration value="IndiffData"/>
+						<xsd:enumeration value="RebootEvent"/>
+						<xsd:enumeration value="Upgraded"/>
+						<xsd:enumeration value="RecallPressed"/>
+						<xsd:enumeration value="DownloadFailed"/>
+						<xsd:enumeration value="IllegalEvent"/>
+						<xsd:enumeration value="SpeedAlarmLevel1"/>
+						<xsd:enumeration value="SpeedAlarmLevel2"/>
+						<xsd:enumeration value="SpeedAlarmLevel3"/>
+						<xsd:enumeration value="IncidentAlarm"/>
+						<xsd:enumeration value="IncidentWarning"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="quality" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>qualityfactor in %</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:int">
+						<xsd:minInclusive value="0"/>
+						<xsd:maxInclusive value="100"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="detectorState" type="local:detectorStateType">
+				<xsd:annotation>
+					<xsd:documentation>state of the sensor</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="accumulatedValueType">
+		<xsd:sequence>
+			<xsd:element name="id" type="xsd:string"/>
+			<xsd:element name="timeline" type="local:timelineType"/>
+			<xsd:element name="los" type="local:losType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>level of service as values 0 to 6 (0:free), see also annotation of global type losType</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="predictedLos" type="local:losType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>predicted level of service</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="travelTime" type="xsd:unsignedLong" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Travel time in seconds</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="normalizedTravelTime" type="xsd:double" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Travel time scaled by length of object; in s/km</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="predictedTravelTime" type="xsd:unsignedLong" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Predicted travel time in s</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="congLength" type="xsd:unsignedLong" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>congestion length in m</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="losValueType">
+		<xsd:sequence>
+			<xsd:element name="id" type="xsd:string"/>
+			<xsd:element name="timeline" type="local:timelineType"/>
+			<xsd:element name="los" type="local:losType">
+				<xsd:annotation>
+					<xsd:documentation>level of service as values 0 to 6 (0:free), see also annotation of global type losType</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="predictedLos" type="local:losType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>predicted level of service</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="predictionTimestamp" type="xsd:dateTime" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>timestamp of predicted LOS in UTC (end)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="quality" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>qualityfactor in %</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:int">
+						<xsd:minInclusive value="0"/>
+						<xsd:maxInclusive value="100"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="measurementCount" type="xsd:double" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Number of used measurements scaled to 1h (unit=[1/h])</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="traveltimeValueType">
+		<xsd:sequence>
+			<xsd:element name="id" type="xsd:string"/>
+			<xsd:element name="timeline" type="local:timelineType"/>
+			<xsd:choice>
+				<xsd:element name="travelTime" type="xsd:double">
+					<xsd:annotation>
+						<xsd:documentation>Travel time in seconds</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="travelSpeed" type="xsd:double">
+					<xsd:annotation>
+						<xsd:documentation>Travelspeed in km/h</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:choice>
+			<xsd:sequence minOccurs="0">
+				<xsd:choice>
+					<xsd:element name="predictedTravelTime" type="xsd:double">
+						<xsd:annotation>
+							<xsd:documentation>Predicted travel time in s</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="predictedTravelSpeed" type="xsd:double">
+						<xsd:annotation>
+							<xsd:documentation>Predicted travel speed in km/h</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:choice>
+				<xsd:element name="predictionTimestamp" type="xsd:dateTime">
+					<xsd:annotation>
+						<xsd:documentation>timestamp of predicted traveltime / travelspeed in UTC (end)</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:element name="congLength" type="xsd:double" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>congestion length in m</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="quality" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>qualityfactor in %</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:int">
+						<xsd:minInclusive value="0"/>
+						<xsd:maxInclusive value="100"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="measurementCount" type="xsd:double" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Number of used measurements scaled to 1h (unit=[1/h])</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="timelineType">
+		<xsd:sequence>
+			<xsd:element name="timestamp" type="xsd:dateTime">
+				<xsd:annotation>
+					<xsd:documentation>current timestamp in UTC (end)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="cycle" type="xsd:int" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>interval length</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="detectorStateType">
+		<xsd:annotation>
+			<xsd:documentation>describes the state of the object:
+0 - o.k.
+1 - n.o.k.
+2 - p.o.k.
+3 - unknown
+4 - substitution</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="0"/>
+			<xsd:maxInclusive value="4"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="losType">
+		<xsd:annotation>
+			<xsd:documentation>0: free
+1: free-dense
+2: dense
+3: denso-congested
+4: congested
+5: unknown
+6: undefined</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="0"/>
+			<xsd:maxInclusive value="6"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="vehicleType">
+		<xsd:annotation>
+			<xsd:documentation>currently following values available:
+- all
+- car
+- truck
+- ...</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="all"/>
+			<xsd:enumeration value="car"/>
+			<xsd:enumeration value="truck"/>
+			<xsd:enumeration value="delivery_truck"/>
+			<xsd:enumeration value="motorcycle"/>
+			<xsd:enumeration value="unclassified"/>
+			<xsd:enumeration value="car_with_trailer"/>
+			<xsd:enumeration value="truck_with_trailer"/>
+			<xsd:enumeration value="truck_with_semi_trailer"/>
+			<xsd:enumeration value="bus"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="predictionVehicleType">
+		<xsd:annotation>
+			<xsd:documentation>currently following values available:
+- all
+- car
+- truck
+- ...</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="all"/>
+			<xsd:enumeration value="car"/>
+			<xsd:enumeration value="truck"/>
+			<xsd:enumeration value="delivery_truck"/>
+			<xsd:enumeration value="motorcycle"/>
+			<xsd:enumeration value="unclassified"/>
+			<xsd:enumeration value="car_with_trailer"/>
+			<xsd:enumeration value="truck_with_trailer"/>
+			<xsd:enumeration value="truck_with_semi_trailer"/>
+			<xsd:enumeration value="bus"/>
+			<xsd:enumeration value="urban_bus"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="valueType">
+		<xsd:attribute name="vehicle" type="local:vehicleType" use="required"/>
+		<xsd:attribute name="count" type="xsd:int" use="required"/>
+		<xsd:attribute name="occ" type="xsd:int" use="optional"/>
+		<xsd:attribute name="speed" type="xsd:int" use="optional"/>
+	</xsd:complexType>
+</xsd:schema>

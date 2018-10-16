@@ -1,0 +1,1 @@
+This document is meant to explain the technical aspects of the solution in the specific scenario of connecting a traffic controller to smartguard. Although its also possible to use the same concept and architecture for other equipments as long they provide similar functionality with equipment that is already supported by smartGuard.

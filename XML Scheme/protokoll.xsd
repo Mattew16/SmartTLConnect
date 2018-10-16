@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2009 sp1 (http://www.altova.com) von XMLSpy 2009 Professional Ed., Concurrent for 10 users (with SMP from 2009-08-13 to 2010-08-14) (Siemens AG) bearbeitet -->
+<!-- Versin 1.0 initial version by Senninger (Siemens AG) -->
+<!-- Versin 5.3 initial version OCPI2 (Siemens AG) -->
+<xsd:schema xmlns="http://otec-konsortium.de/OCIT-I_SP-PD" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://otec-konsortium.de/OCIT-I_SP-PD" elementFormDefault="qualified">
+	<xsd:simpleType name="StdTokenType">
+		<xsd:annotation>
+			<xsd:documentation>Token, welches nullable ist</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="([A-Z]|[a-z]|[0-9]|_)*"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:element name="Protokoll">
+		<xsd:annotation>
+			<xsd:documentation>Description of the commands: :inquireAll, put, delete, get, getContentInfo and according responses</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:choice>
+				<xsd:element ref="put"/>
+				<xsd:element ref="putResponse"/>
+				<xsd:element ref="get"/>
+				<xsd:element ref="getResponse"/>
+				<xsd:element ref="inquireAll"/>
+				<xsd:element ref="inquireAllResponse"/>
+				<xsd:element ref="delete"/>
+				<xsd:element ref="deleteResponse"/>
+				<xsd:element ref="getContentInfo"/>
+				<xsd:element ref="getContentInfoResponse"/>
+				<xsd:element ref="wait4changes" minOccurs="0"/>
+				<xsd:element ref="wait4changesResponse" minOccurs="0"/>
+				<xsd:element name="invoke" type="invokeType" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Super call to invoke a sequence of different simple calls</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="invokeResponse" type="invokeResponseType" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Response of invoke</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="wait4gets" type="wait4getsType" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>multiple get that waits for data of at least one get or maxWaitTime.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="wait4getsResponse" type="wait4getsResponseType" minOccurs="0"/>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="userName" type="xsd:NMTOKEN">
+		<xsd:annotation>
+			<xsd:documentation>User identifier; only characters, numbers and _ allowed</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="passWord" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Password</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="watchdog" nillable="true">
+		<xsd:annotation>
+			<xsd:documentation>Timeout supervision of the client at the server side. The watchdog is used to issue a self control of the client. The server notes a timeout if the watchdogtime of client elapses. In case of empty watchdog no timeout supervision is available.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="clientId" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Unique identifier of the client (e.g. IP-Address + _ + processnumber of the client .</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="timeOut">
+					<xsd:annotation>
+						<xsd:documentation>Timeout in minutes during the client will contact the server (maximal 1 Woche)</xsd:documentation>
+					</xsd:annotation>
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:int">
+							<xsd:minInclusive value="1"/>
+							<xsd:maxInclusive value="10080"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="lastStart" type="xsd:dateTime">
+		<xsd:annotation>
+			<xsd:documentation>last start of the server (Format: "1999-05-31T13:20:00.000+02:00"  entspricht 31.05.1999 13:20 MESZ (MEZ=+01:00))</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="errorCode" nillable="false">
+		<xsd:annotation>
+			<xsd:documentation>Errorcode (0:no error)</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:int">
+				<xsd:enumeration value="0">
+					<xsd:annotation>
+						<xsd:documentation>kein Fehler</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="1">
+					<xsd:annotation>
+						<xsd:documentation>falscher Benutzer oder falsches Passwort</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="2">
+					<xsd:annotation>
+						<xsd:documentation>Ringpuffer-Ueberlauf</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="10">
+					<xsd:annotation>
+						<xsd:documentation>Datensatz nicht vorhanden</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="11">
+					<xsd:annotation>
+						<xsd:documentation>Datensatz kann nicht geaendert werden</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="12">
+					<xsd:annotation>
+						<xsd:documentation>Datensatz kann nicht geloescht werden</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="13">
+					<xsd:annotation>
+						<xsd:documentation>Attribute koennen die Werte nicht annehmen</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="14">
+					<xsd:annotation>
+						<xsd:documentation>Es wurde ein leerer Objekttyp gefunden.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="15">
+					<xsd:annotation>
+						<xsd:documentation>Objekttyp nicht gefunden.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="16">
+					<xsd:annotation>
+						<xsd:documentation>Fehler beim Schreiben des Datensatzes.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="17">
+					<xsd:annotation>
+						<xsd:documentation>Fehler beim Anlegen des Datensatzes.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="18">
+					<xsd:annotation>
+						<xsd:documentation>Fehler beim Löschen des Datensatzes.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="19">
+					<xsd:annotation>
+						<xsd:documentation>Keine Filterliste zum Löschen angegeben.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="20">
+					<xsd:annotation>
+						<xsd:documentation>Server kurzzeitig nicht verfügbar.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="21">
+					<xsd:annotation>
+						<xsd:documentation>Es fehlen Parameter zum Ausführen der Methode.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="22">
+					<xsd:annotation>
+						<xsd:documentation>Interner Fehler im Protokoll Manager.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="23">
+					<xsd:annotation>
+						<xsd:documentation>Weitere Clients für die Daten registriert!</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="30">
+					<xsd:annotation>
+						<xsd:documentation>Eine Datei konnte nicht geöffnet werden.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="31">
+					<xsd:annotation>
+						<xsd:documentation>Beim Öffnen einer Datei ist ein Fehler aufgetreten.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="32">
+					<xsd:annotation>
+						<xsd:documentation>Eine geöffnete Datei konnte nicht gelesen werden.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="33">
+					<xsd:annotation>
+						<xsd:documentation>Interner Fehler beim Lesen des Archives.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="34">
+					<xsd:annotation>
+						<xsd:documentation>Interner Fehler beim Parsen des Archives.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="35">
+					<xsd:annotation>
+						<xsd:documentation>Fehler beim Parsen des Archives.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="36">
+					<xsd:annotation>
+						<xsd:documentation>Fehler beim Aktivieren des Datensatzes.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="37">
+					<xsd:annotation>
+						<xsd:documentation>Fehler beim Deaktivieren des Datensatzes.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="38">
+					<xsd:annotation>
+						<xsd:documentation>Fehler beim Lesen des Datensatzes.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="39">
+					<xsd:annotation>
+						<xsd:documentation>Kein Object wurde gefunden.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="40">
+					<xsd:annotation>
+						<xsd:documentation>Zeitbereich nicht vollständig.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="41">
+					<xsd:annotation>
+						<xsd:documentation>Zeitbereich vollständig.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="errorText" type="xsd:string" nillable="true">
+		<xsd:annotation>
+			<xsd:documentation>plain error text</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="trec" type="xsd:dateTime">
+		<xsd:annotation>
+			<xsd:documentation>Aufzeichnungsdatum des Datensatzes (Format: "1999-05-31T13:20:00.000+02:00"  entspricht 31.05.1999 13:20 MESZ (MEZ=+01:00))</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="objectList">
+		<xsd:annotation>
+			<xsd:documentation>Liste von Objekten</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="identifier">
+					<xsd:annotation>
+						<xsd:documentation>Objektidentifikation</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="filterList" nillable="true">
+		<xsd:annotation>
+			<xsd:documentation>Objectfilter (a empty list means on all requsts except  activate: ALL Objects of this type. On activate means a empty list:no object of this type)</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="filter" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="tstore" type="xsd:dateTime" nillable="0">
+		<xsd:annotation>
+			<xsd:documentation>Store time of data (Format: "1999-05-31T13:20:00.000+02:00"  equals 31.05.1999 13:20 MESZ (MEZ=+01:00))</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="objectType" type="xsd:NMTOKEN">
+		<xsd:annotation>
+			<xsd:documentation>Objekttypes to identify the type of the required data (first search key).        (contents of getContentInfo) </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="ident" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Identification of the data/object  ( unique within the objectType and source (if available) )</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="source" type="StdTokenType" nillable="true">
+		<xsd:annotation>
+			<xsd:documentation>Source of the data. The source depends on the subsystem and requires, that different clients will get different Source-Namen. </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="identifier" type="identifierType">
+		<xsd:annotation>
+			<xsd:documentation>Unique identifier of the object (consist of  source und ident-field).</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="put" type="putType">
+		<xsd:annotation>
+			<xsd:documentation>Configuration method for data</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="putResponse" type="putResponseType">
+		<xsd:annotation>
+			<xsd:documentation>Response of put method</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="get" type="getType">
+		<xsd:annotation>
+			<xsd:documentation>Read method to get data (delta since last request</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="getResponse" type="getResponseType">
+		<xsd:annotation>
+			<xsd:documentation>Response of get method</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="inquireAll" type="inquireAllType">
+		<xsd:annotation>
+			<xsd:documentation>Read method to get all objects of one object type</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="inquireAllResponse" type="inquireAllResponseType">
+		<xsd:annotation>
+			<xsd:documentation>Response of inquireAll</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="delete" type="deleteType">
+		<xsd:annotation>
+			<xsd:documentation>Method to delete dynamic datan</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="deleteResponse" type="deleteResponseType">
+		<xsd:annotation>
+			<xsd:documentation>Response of delete</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="wait4changes" type="wait4changesType">
+		<xsd:annotation>
+			<xsd:documentation>Read method to get data (delta since last request</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="wait4changesResponse" type="wait4changesResponseType">
+		<xsd:annotation>
+			<xsd:documentation>Response of get method</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="storetime" type="xsd:dateTime" nillable="true">
+		<xsd:annotation>
+			<xsd:documentation>returned by inquireAll and get (Format: "1999-05-31T13:20:00.000+02:00"  equals 31.05.1999 13:20 MESZ (MEZ=+01:00)). </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="position" type="xsd:unsignedInt" nillable="true">
+		<xsd:annotation>
+			<xsd:documentation>Is used to identify entries in the buffer of the server. Will be returned by inquireAllResponse and getResponse and must be given as parameter on following get-call. If  position equals 0 the complete buffer will be returned. </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="objectState">
+		<xsd:annotation>
+			<xsd:documentation>Indicator, if data is created, modified or deleted at tstore .</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="new"/>
+				<xsd:enumeration value="modified"/>
+				<xsd:enumeration value="deleted"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="dataList" nillable="true">
+		<xsd:annotation>
+			<xsd:documentation>Read Data</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="ds" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="tstore"/>
+							<xsd:element ref="objectState">
+								<xsd:annotation>
+									<xsd:documentation>Indikator, ob Datensatzt neu angelegt, modifiziert oider gelöscht wurde.</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element ref="identifier"/>
+							<xsd:element ref="data"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="filter">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="identifier"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="headerRequest">
+		<xsd:annotation>
+			<xsd:documentation>basic header ofpm requests</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence minOccurs="0">
+			<xsd:element ref="userName"/>
+			<xsd:element ref="passWord"/>
+			<xsd:element ref="watchdog" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="headerObjectRequest">
+		<xsd:annotation>
+			<xsd:documentation>basic header with ObjectType</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="headerRequest">
+				<xsd:sequence>
+					<xsd:element ref="objectType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="headerFilterRequest">
+		<xsd:annotation>
+			<xsd:documentation>Object header with FilterList</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="headerObjectRequest">
+				<xsd:sequence>
+					<xsd:element ref="filterList"/>
+					<xsd:element ref="data" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="headerResponse">
+		<xsd:annotation>
+			<xsd:documentation>basic header of pm responses</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="lastStart"/>
+			<xsd:element ref="errorCode"/>
+			<xsd:element ref="errorText" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="headerDataResponse">
+		<xsd:annotation>
+			<xsd:documentation>header of pm responses with data</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="headerResponse">
+				<xsd:sequence>
+					<xsd:element ref="storetime" minOccurs="0"/>
+					<xsd:element ref="position"/>
+					<xsd:element ref="dataList"/>
+				</xsd:sequence>
+				<xsd:attribute name="requestIndex" type="xsd:int" use="optional" default="0">
+					<xsd:annotation>
+						<xsd:documentation>request index of getlist of wait4gets call</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="inDataType">
+		<xsd:annotation>
+			<xsd:documentation>Type for incoming Data for method invoke</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="data"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="outDataType">
+		<xsd:annotation>
+			<xsd:documentation>Type for outgoing Data for method invoke</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="data"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="putType">
+		<xsd:complexContent>
+			<xsd:extension base="headerObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="putList" nillable="true">
+						<xsd:annotation>
+							<xsd:documentation>List of objects (data), which should be configured at the server.</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="putds" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>put-Datensatz. Wenn der Identifier im Server nicht gefunden wird, ist es objekttypabhängig, ob der datensatz neu angelegt oder mit Fehler zurückgewiesen wird. (sie getContentInfo)</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element ref="identifier"/>
+											<xsd:element ref="data"/>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="putResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="headerResponse">
+				<xsd:sequence>
+					<xsd:element name="badList" nillable="true">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="badds" minOccurs="0" maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element ref="errorCode"/>
+											<xsd:element ref="errorText"/>
+											<xsd:element ref="identifier"/>
+											<xsd:element ref="data"/>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element ref="data" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="invokeType">
+		<xsd:sequence>
+			<xsd:element ref="get" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="inquireAll" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="put" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="delete" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="inData" type="inDataType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>incoming Data for method invoke, Server generates outgoing Data in outData of invokeResponse. Actually used for TSC Server/Client Transport </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="getType">
+		<xsd:complexContent>
+			<xsd:extension base="headerFilterRequest">
+				<xsd:choice>
+					<xsd:element ref="position"/>
+					<xsd:sequence>
+						<xsd:element ref="storetime" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>Startzeit der Abfrage (Rückgabe in getResult/inquireAllResult)</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="endStore" type="xsd:dateTime" nillable="true" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>Last time of the request (Format: "1999-05-31T13:20:00.000+02:00"  equals 31.05.1999 13:20 MESZ (MEZ=+01:00))</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:choice>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="invokeResponseType">
+		<xsd:sequence>
+			<xsd:element ref="getResponse" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="inquireAllResponse" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="putResponse" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="deleteResponse" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="outData" type="outDataType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>OutgoingData for method invoke, for more information see invokeType.inData</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="getResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="headerDataResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="inquireAllType">
+		<xsd:complexContent>
+			<xsd:extension base="headerFilterRequest"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="inquireAllResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="headerDataResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="deleteType">
+		<xsd:complexContent>
+			<xsd:extension base="headerFilterRequest"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="deleteResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="headerResponse">
+				<xsd:sequence>
+					<xsd:element name="deleteBadList" nillable="true">
+						<xsd:annotation>
+							<xsd:documentation>List of not deleted objects</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="delds" type="baddsType" minOccurs="0" maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="getContentInfoType">
+		<xsd:complexContent>
+			<xsd:extension base="headerRequest"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="getContentInfoResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="headerResponse">
+				<xsd:sequence>
+					<xsd:element name="contentInfoList" nillable="true">
+						<xsd:annotation>
+							<xsd:documentation>List of all available object types</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="contentInfo" minOccurs="0" maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="objectTypeName" type="xsd:NMTOKEN">
+												<xsd:annotation>
+													<xsd:documentation>Name of the Objecttype. The name may consist of characters, numbers and  "_" </xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="objectTypeURI" type="xsd:anyURI">
+												<xsd:annotation>
+													<xsd:documentation>Schema definition file</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="readable" type="xsd:boolean">
+												<xsd:annotation>
+													<xsd:documentation>true, if data of this object can be read (readable)</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="writeable" type="xsd:boolean">
+												<xsd:annotation>
+													<xsd:documentation>true, if data of this object can be written</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="createable" type="xsd:boolean">
+												<xsd:annotation>
+													<xsd:documentation>true, if data can be created</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="deleteable" type="xsd:boolean">
+												<xsd:annotation>
+													<xsd:documentation>true, if data can be deleted</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="updateCycle" type="xsd:int">
+												<xsd:annotation>
+													<xsd:documentation>Recommended request interval in minutes. </xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="activateMaxWatchdog" nillable="true" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Wenn dieser Eintrag gesetzt ist, können für diesen Objekttyp neue Werte aktiviert werden (siehe activate). Bei aktivierten Werten muß der Client den Watchdog einsetzen und darf maximal diesen Wert als Watchdog einsetzen.</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:unsignedInt">
+														<xsd:minInclusive value="1"/>
+														<xsd:maxInclusive value="1440"/>
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="wait4changesType">
+		<xsd:complexContent>
+			<xsd:extension base="headerFilterRequest"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="wait4changesResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="headerDataResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="getContentInfo" type="getContentInfoType">
+		<xsd:annotation>
+			<xsd:documentation>Method to retrieve available contents of the server</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="getContentInfoResponse" type="getContentInfoResponseType">
+		<xsd:annotation>
+			<xsd:documentation>Response of getContentInfo</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="data" type="xsd:anyType">
+		<xsd:annotation>
+			<xsd:documentation>Dummy-Element, which includes the data.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="identifierType">
+		<xsd:sequence>
+			<xsd:element ref="source" minOccurs="0"/>
+			<xsd:element ref="ident"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="baddsType">
+		<xsd:sequence>
+			<xsd:element ref="errorCode"/>
+			<xsd:element ref="errorText"/>
+			<xsd:element ref="filter"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="wait4getsType">
+		<xsd:annotation>
+			<xsd:documentation>similar to multiple gets, but the server waits for changes</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="get" maxOccurs="100"/>
+		</xsd:sequence>
+		<xsd:attribute name="maxWaitTime" type="xsd:int" use="optional" default="30">
+			<xsd:annotation>
+				<xsd:documentation>maximal wait time in seconds that the service waits if no data is available.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="wait4getsResponseType">
+		<xsd:sequence>
+			<xsd:element ref="getResponse" minOccurs="0" maxOccurs="100"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ProtocolVersionInfo">
+		<xsd:annotation>
+			<xsd:documentation>Protocol Software and schema version. Use attribute fixed to choose version number. To be used as ObjType with Name ProtocolVersioInfo.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="major" type="xsd:int" fixed="4"/>
+			<xsd:element name="minor" type="xsd:int" fixed="1"/>
+			<xsd:element name="buildTime" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

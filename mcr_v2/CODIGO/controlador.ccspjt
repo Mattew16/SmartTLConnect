@@ -1,0 +1,74 @@
+[PROJECT]
+Target=controlador.hex
+Processor_Text=PIC16F628A
+CCSVersion=5.056d
+Compiler=PCM
+[Target Data]
+FileList=controlador.c
+[Directories]
+Include=C:\Program Files (x86)\PICC\Devices\;C:\Program Files (x86)\PICC\Drivers\
+[controlador.c]
+Type=4
+[mru-list]
+1=controlador.c
+[Opened Files]
+1=controlador.c
+2=..\..\..\tmp\controlador_2.c
+t1=113
+Count=2
+t2=113
+
+[ProjectLog]
+Days=6
+D1=28-04-2016
+D1_L=6
+D1_L1=[44289]Project Opened.
+D1_L2=[44322]Started Editing.
+D1_L3=[44886]Stopped Editing.
+TotalEdit=11
+TotalDebug=0
+D1_E=5
+D1_D=0
+D1_L4=[50361]Project Closed.
+D1_L5=[57769]Project Opened.
+D1_L6=[60942]Project Closed.
+D2=29-04-2016
+D2_L=6
+D2_L1=[35289]Project Opened.
+D2_L2=[35510]Started Editing.
+D2_L3=[35814]Stopped Editing.
+D2_E=1
+D2_D=0
+D2_L4=[36526]Project Closed.
+D2_L5=[41762]Project Opened.
+D2_L6=[53211]Project Closed.
+D3=02-05-2016
+D3_L=6
+D3_L1=[36607]Project Opened.
+D3_L2=[36859]Started Editing.
+D3_L3=[37394]Stopped Editing.
+D3_L4=[37583]Started Editing.
+D3_L5=[37903]Stopped Editing.
+D3_E=5
+D3_D=0
+D3_L6=[57149]Project Closed.
+D4=03-05-2016
+D4_L=2
+D4_L1=[42129]Project Opened.
+D4_L2=[42499]Project Closed.
+D5=17-05-2016
+D5_L=3
+D5_L1=[39186]Project Opened.
+D5_L2=[62839]Project Opened.
+D5_L3=[68127]Project Closed.
+D6=18-05-2016
+D6_L=3
+D6_L1=[34587]Project Opened.
+D6_L2=[34645]Started Editing.
+D6_L3=[34739]Project Closed.
+
+[defines]
+buildcount=22
+[Units]
+Count=1
+1=controlador (main)

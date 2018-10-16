@@ -1,0 +1,36 @@
+http://www.artima.com/cppsource/xml_data_binding.html
+
+
+http://www.beej.us/guide/bgnet/output/html/multipage/syscalls.html
+
+
+https://msdn.microsoft.com/en-us/library/ff802693.aspx
+
+
+
+
+Hello, 
+
+I am working on the wrapper that will allow the connection between third party controllers and sGuard. 
+To be able to do this I need to understand how the current controllers are interacting with it so I can make
+the necessary adaptations on my code. For this I would like to request access to the source code that is responsible 
+for this connection in the Siemens controllers.
+
+**Se for possivel, enviar esses documentos para o Afonso, pois ainda não tenho acesso ao meu email @siemens.com ** 
+
+Não sei como escrever esta última parte.
+
+Best regards,
+Pedro Silva
+ 
+
+I am working on the wrapper that will allow the connection between third party controllers and sGuard. 
+To be able to do this I need to understand how the current controllers are interacting with it so I can make
+the necessary adaptations on my code. For this I would like to know if it is possible to have access to the source code 
+that is responsible for this connection in the Siemens controllers.
+ 
+If it is needed to share any confidential information please send it to Afonso and I’ll analyze it afterwards.
+
+-----------------------------------------------------------------------
+
+sGuard is a very complex system, using a customized OS and computer to provide the required control. This system is very hard to reproduce on older systems because they dont have the same capabilities and adding the necessary computing power would be very expensive. In order to make this adaptation the source code is an important piece, that will allow to make a connection while having all the biggest changes being done client side.

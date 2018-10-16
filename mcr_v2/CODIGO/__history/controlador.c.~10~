@@ -1,0 +1,230 @@
+
+#define led2sinal pin_b5
+#define ledpower pin_a6
+
+#define blinkingMode_signal pin_b3
+#define blinkingMode pin_a3
+#define jca pin_b6
+#define power pin_a4
+#define BUFFER_SIZE 60 //Buffer size you can adjust this size 
+//*********************************************************************
+#include <16F628A.h>
+#include <stdio.h>
+#include <stdlib.h> 
+#include <string.h>
+
+#use delay(clock=15000000)// Clock de 4MHz
+#use rs232(baud=9600,parity=N,xmit=PIN_B2,rcv=PIN_B1,bits=8)
+#use fast_io(a)
+
+
+#priority int_rda
+#byte RCREG = 0x1A 
+
+unsigned char  charFromModem = 0;
+unsigned int8 buffer[4]; 
+unsigned int status = 3; //current status of the controller 
+unsigned int receivedStatus = 3; //status received from converter
+
+
+
+#int_rda //called on interruption received data from modem (Serial 232)
+void get_232(){
+  int i;
+  for(i = 0; i<3;i++){
+    if(kbhit()){
+      charFromModem = getc();
+      buffer[i] = charFromModem;
+    }
+  }
+  
+  OUTPUT_TOGGLE(led2sinal);
+
+  if(buffer[0]=='I' && buffer[1]=='N'&& buffer[2]=='T'){
+    receivedStatus = 2;
+  }    
+   
+  if(buffer[0]=='C' && buffer[1]=='O' && buffer[2]=='R'){
+    receivedStatus = 0;
+  }
+  
+}
+     
+       
+void readMessage(){
+  printf("AT^SISR=0,4\r");
+  DELAY_MS(500);
+}   
+
+void sendMessage (char message){
+      printf("AT^SISW=0,8\r");
+      delay_ms(500);
+      printf("%s\r", message);
+      delay_ms(500);
+}
+
+void modemConfiguration(){
+
+  printf("AT^SICS=0,conType,GPRS0 \r");
+  DELAY_MS(500);
+
+  printf("AT^SICS=0,inactTO,6200 \r");
+  DELAY_MS(500);
+
+  printf("AT^SICS=0,user,vodafone \r");
+  DELAY_MS(500);
+
+
+  printf("AT^SICS=0,passwd,vodafone \r");
+  DELAY_MS(500);
+
+  printf("AT^SICS=0,apn,internet.vodafone.pt \r");
+  DELAY_MS(500);
+}  
+
+void setupConnection(){
+  printf("AT^SISS=0,srvType,socket \r");
+  DELAY_MS(500);
+
+  printf("AT^SISS=0,conId,0 \r");
+  DELAY_MS(500);
+
+  printf("AT^SISS=0,alphabet,1 \r");
+  DELAY_MS(500);
+
+  printf("AT^SISS=0,address,socktcp://88.217.155.226:8189\r");
+  DELAY_MS(500);
+} 
+
+boolean openConnection(){
+  char str1[10];
+
+  printf("AT^SISO=0\r");
+  delay_ms(500);
+  scanf("%s", str1);
+  if(str1 == "OK"){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+boolean closeConnection(){
+  char str1[10];
+
+  printf("AT^SISC=0\r");
+  delay_ms(500);
+  scanf("%s", str1);
+  if(str1 == "OK"){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+//Status are coded in numbers. 0 is normal mode, 1 is blinking mode, 2 is power off mode. 
+void changeStatus(int newStatus){
+ if(newStatus == 1){
+    output_high(pin_b7);
+    status = newStatus;
+ }
+ if(newStatus == 0){
+    output_low(pin_b7);
+    status = newStatus;  
+ } 
+ if(newStatus == 2){
+  status = newStatus;
+ }
+}
+
+void checkBlinkingMode(){
+  int i;
+  if(input(blinkingMode)){
+    for(i = 0; i<15; i++){
+      output_high(led2sinal);
+      delay_ms(500);
+      output_low(led2sinal);
+      delay_ms(500);
+    }
+    if(input(blinkingMode)){
+      changeStatus(1);
+    }else{
+      changeStatus(0);
+    }
+  }
+}
+
+void main(){
+  
+  const char *messageList[3] = {"1COR", "1INT", "1OFF"};
+  
+  output_low(PIN_A5);
+  delay_ms(500);
+  output_high(PIN_A5);
+
+  //set_uart_speed(9600);
+  enable_interrupts(int_rda);
+  enable_interrupts(global);
+  setup_timer_0(RTCC_INTERNAL|RTCC_DIV_1);  // Configuração do Timer0
+  setup_timer_1(T1_DISABLED);               // Configuração do Timer1
+  setup_timer_2(T2_DISABLED,0,1);           // Configuração do Timer2
+  setup_ccp1(CCP_OFF);                      // Configuração do CCP1
+  setup_comparator(NC_NC_NC_NC);            // Configuração dos Comparadores
+  setup_vref(FALSE);       // Configuração da Tensão de referência
+
+  delay_ms(500);
+  //printf("AT+CPIN=5806 \r");
+  //DELAY_MS(2000);
+
+  // CONFIGURAÇÃO DO MODEM
+  modemConfiguration();
+
+  //ligação
+  setupConnection();
+
+  //sinaliza fim de inicialização do modem
+  output_high(led2sinal);
+  delay_ms(500);
+  output_low(led2sinal);
+  delay_ms(500);
+
+  while (true) {
+    inicio:
+    if(!input (power)){
+      changeStatus(2);
+      openConnection();
+      sendMessage(messageList[status]);
+      closeConnection();
+      delay_ms(500);
+      }
+    }
+    if(input (power)){
+      openConnection();
+      readMessage();
+      closeConnection();
+      delay_ms(500);
+      if (receivedStatus != status){
+        changeStatus(receivedStatus);
+        openConnection();
+        sendMessage(messageList[status]);
+        closeConnection();
+        delay_ms(500);
+      }  
+      else{
+          checkBlinkingMode();
+          openConnection();
+          sendMessage(messageList[status]);
+          closeConnection();
+          delay_ms(500);
+        }
+        
+      }
+  }
+  
+
+       
+
+
+
